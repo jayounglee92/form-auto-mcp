@@ -1,22 +1,22 @@
 # form-auto-mcp
 
-Claude Desktop에서 자연어로 요청하면 내부 시스템 폼을 자동으로 입력하는 MCP 서버입니다.
+MCP server for Claude Desktop that automates internal system form submissions using Playwright.
 
-## 기능
+## Features
 
-- 엑셀/CSV 또는 Google Sheets에서 데이터를 읽어 폼 자동 입력
-- 메뉴 네비게이션 (사이드 메뉴 클릭 → 페이지 이동) 자동화
-- 라벨 기반 폼 필드 매칭 (엑셀 열 이름 = 폼 라벨)
-- 보기 모드 (브라우저 표시) / 빠른 모드 (백그라운드) 선택
-- 성공/실패 결과 리포트 + 실패 시 스크린샷
+- Read data from Excel/CSV or Google Sheets and auto-fill forms
+- Automated menu navigation (sidebar menu click → page transition)
+- Label-based form field matching (Excel column name = form label text)
+- Visible mode (browser shown) / Fast mode (background) toggle
+- Result report with success/failure counts + screenshots on failure
 
-## 설치
+## Installation
 
-### 사전 요구사항
+### Prerequisites
 
-- Node.js 18 이상
+- Node.js 18+
 
-### 설치 방법
+### Setup
 
 ```bash
 git clone https://github.com/jayounglee92/form-auto-mcp.git
@@ -26,9 +26,9 @@ npx playwright install chromium
 npm run build
 ```
 
-### Claude Desktop 설정
+### Claude Desktop Configuration
 
-`claude_desktop_config.json`에 추가:
+Add to `claude_desktop_config.json`:
 
 ```json
 {
@@ -41,9 +41,9 @@ npm run build
 }
 ```
 
-### 사이트 설정
+### Site Configuration
 
-`config.json` 파일을 프로젝트 루트에 생성:
+Create `config.json` in the project root:
 
 ```json
 {
@@ -55,35 +55,39 @@ npm run build
 }
 ```
 
-### Google Sheets 사용 시 (선택)
+### Google Sheets (Optional)
 
-`.env` 파일 생성:
+Create a `.env` file:
 
 ```
 GOOGLE_API_KEY=your_api_key
 ```
 
-## 사용법
+## Usage
 
-### 엑셀 데이터로 폼 입력
+### Fill forms from Excel
 
-Claude Desktop에서:
-> "이 엑셀 파일로 폼 입력해줘" (파일 첨부)
+In Claude Desktop:
+> "이 엑셀 파일로 폼 입력해줘" (attach file)
 
-### Google Sheets로 폼 입력
+### Fill forms from Google Sheets
 
-> "이 구글 시트로 폼 입력해줘: [시트 URL]"
+> "이 구글 시트로 폼 입력해줘: [sheet URL]"
 
-### 빠른 모드
+### Fast mode (headless)
 
 > "빠르게 폼 입력해줘"
 
-## 엑셀 작성 규칙
+## Excel Format
 
-| 메뉴경로 | 라벨1 | 라벨2 | ... |
-|---------|-------|-------|-----|
-| 메뉴A > 하위메뉴B | 값1 | 값2 | ... |
+| 메뉴경로 | Label1 | Label2 | ... |
+|---------|--------|--------|-----|
+| MenuA > SubMenuB | Value1 | Value2 | ... |
 
-- 첫 번째 열: `메뉴경로` (> 로 구분)
-- 나머지 열: 열 이름 = 화면의 폼 라벨 텍스트
-- `templates/sample.xlsx` 참고
+- First column: `메뉴경로` (menu path, separated by `>`)
+- Remaining columns: column name = form label text on screen
+- See `templates/sample.xlsx` for a sample
+
+## License
+
+MIT
