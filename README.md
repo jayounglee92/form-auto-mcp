@@ -5,8 +5,8 @@ MCP server for Claude Desktop that automates internal system form submissions us
 ## Features
 
 - Read data from Excel/CSV or Google Sheets and auto-fill forms
-- Automated menu navigation (sidebar menu click → page transition)
-- Label-based form field matching (Excel column name = form label text)
+- Automated menu navigation (menu text click → page transition)
+- Label/ID/Placeholder-based form field matching
 - Visible mode (browser shown) / Fast mode (background) toggle
 - Result report with success/failure counts + screenshots on failure
 
@@ -16,44 +16,25 @@ MCP server for Claude Desktop that automates internal system form submissions us
 
 - Node.js 18+
 
-### Setup
-
-```bash
-git clone https://github.com/jayounglee92/form-auto-mcp.git
-cd form-auto-mcp
-npm install
-npx playwright install chromium
-npm run build
-```
-
 ### Claude Desktop Configuration
 
 Add to `claude_desktop_config.json`:
+
+- **Mac:** `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
 
 ```json
 {
   "mcpServers": {
     "form-automation": {
-      "command": "node",
-      "args": ["/path/to/form-auto-mcp/dist/index.js"]
+      "command": "npx",
+      "args": ["form-auto-mcp"]
     }
   }
 }
 ```
 
-### Site Configuration
-
-Create `config.json` in the project root:
-
-```json
-{
-  "siteUrl": "https://your-internal-system.com",
-  "menuSelector": ".side-menu",
-  "saveButtonText": "저장",
-  "defaultMode": "visible",
-  "stepDelay": 500
-}
-```
+Restart Claude Desktop. That's it — no clone, no build needed.
 
 ### Google Sheets (Optional)
 
@@ -63,35 +44,15 @@ Create a `.env` file:
 GOOGLE_API_KEY=your_api_key
 ```
 
-## Quick Test (demoqa.com)
-
-A test config and sample Excel for [demoqa.com](https://demoqa.com) are included so you can try the automation right away — no internal system needed.
-
-**Included test files:**
-- `config.json` — pre-configured for demoqa.com
-- `templates/test-demoqa.xlsx` — 3 rows of sample data (홍길동, 김철수, 이영희)
-
-**Run the test:**
-
-```bash
-npm run build
-node test-run.mjs
-```
-
-A browser window will open and you can watch the automation fill out the Text Box form 3 times in a row. The result report will be printed in the terminal.
-
-> **Note:** To use with your actual internal system, replace `config.json` with your site's URL, menu selector, and save button text. Update the Excel column names to match your form's labels or input IDs.
-
 ## Usage
 
-### Fill forms from Excel
+In Claude Desktop, provide a site URL and attach an Excel file:
 
-In Claude Desktop:
-> "이 엑셀 파일로 폼 입력해줘" (attach file)
+> "https://your-site.com 에 이 엑셀로 폼 입력해줘" (attach file)
 
-### Fill forms from Google Sheets
+### Google Sheets
 
-> "이 구글 시트로 폼 입력해줘: [sheet URL]"
+> "https://your-site.com 에 이 구글 시트로 폼 입력해줘: [sheet URL]"
 
 ### Fast mode (headless)
 
@@ -99,13 +60,35 @@ In Claude Desktop:
 
 ## Excel Format
 
-| 메뉴경로 | Label1 | Label2 | ... |
-|---------|--------|--------|-----|
-| MenuA > SubMenuB | Value1 | Value2 | ... |
+Everything is controlled from the Excel file — menu path, form fields, and save button.
 
-- First column: `메뉴경로` (menu path, separated by `>`)
-- Remaining columns: column name = form label text on screen
-- See `templates/sample.xlsx` for a sample
+| 메뉴경로 | field1 | field2 | ... | 저장버튼 |
+|---------|--------|--------|-----|---------|
+| MenuA > SubMenuB | Value1 | Value2 | ... | Submit |
+
+- **메뉴경로** (first column): menu path to click, separated by `>`
+- **Form fields** (middle columns): column name = form label, ID, or placeholder on screen
+- **저장버튼** (last column): text of the save/submit button to click
+- See `templates/test-demoqa.xlsx` for a sample
+
+## Quick Test (demoqa.com)
+
+A sample Excel for [demoqa.com](https://demoqa.com) is included so you can try the automation right away.
+
+**From Claude Desktop:**
+> "https://demoqa.com/elements 에 templates/test-demoqa.xlsx 파일로 폼 입력해줘"
+
+**Or from terminal (for developers):**
+
+```bash
+git clone https://github.com/jayounglee92/form-auto-mcp.git
+cd form-auto-mcp
+npm install
+npm run build
+node test-run.mjs
+```
+
+A browser window will open and fill out the Text Box form 3 times in a row.
 
 ## License
 
