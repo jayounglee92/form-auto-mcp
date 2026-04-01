@@ -3,7 +3,6 @@ import { resolve } from "path";
 
 export interface Config {
   siteUrl: string;
-  menuSelector: string;
   saveButtonText: string;
   defaultMode: "visible" | "fast";
   stepDelay: number;
@@ -11,7 +10,6 @@ export interface Config {
 
 const DEFAULT_CONFIG: Config = {
   siteUrl: "",
-  menuSelector: ".side-menu",
   saveButtonText: "저장",
   defaultMode: "visible",
   stepDelay: 500,

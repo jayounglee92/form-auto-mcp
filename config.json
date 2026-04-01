@@ -1,7 +1,6 @@
 {
-  "siteUrl": "https://demoqa.com/elements",
-  "menuSelector": ".left-pannel",
-  "saveButtonText": "Submit",
-  "defaultMode": "visible",
-  "stepDelay": 500
+	"siteUrl": "https://demoqa.com/elements",
+	"saveButtonText": "Submit",
+	"defaultMode": "visible",
+	"stepDelay": 500
 }

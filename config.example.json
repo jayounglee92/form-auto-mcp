@@ -1,6 +1,5 @@
 {
   "siteUrl": "https://internal-system.example.com",
-  "menuSelector": ".side-menu",
   "saveButtonText": "저장",
   "defaultMode": "visible",
   "stepDelay": 500
