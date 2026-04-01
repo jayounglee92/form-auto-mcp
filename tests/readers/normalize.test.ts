@@ -1,10 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { normalizeRows, type RawRow, type WorkflowRow } from "../../src/readers/normalize";
+import { normalizeRows, type RawRow } from "../../src/readers/normalize";
 
 describe("normalizeRows", () => {
-  it("메뉴경로와 필드를 분리한다", () => {
+  it("메뉴경로, 필드, 저장버튼을 분리한다", () => {
     const raw: RawRow[] = [
-      { "메뉴경로": "프로젝트 > 일정관리", "프로젝트명": "3월 리뷰", "설명": "주간보고" },
+      { "메뉴경로": "프로젝트 > 일정관리", "프로젝트명": "3월 리뷰", "설명": "주간보고", "저장버튼": "Submit" },
     ];
     const result = normalizeRows(raw);
     expect(result).toEqual([
@@ -12,8 +12,17 @@ describe("normalizeRows", () => {
         rowIndex: 1,
         menuPath: ["프로젝트", "일정관리"],
         fields: { "프로젝트명": "3월 리뷰", "설명": "주간보고" },
+        saveButtonText: "Submit",
       },
     ]);
+  });
+
+  it("저장버튼이 없으면 기본값 '저장'을 사용한다", () => {
+    const raw: RawRow[] = [
+      { "메뉴경로": "운영 > 공지", "제목": "테스트" },
+    ];
+    const result = normalizeRows(raw);
+    expect(result[0].saveButtonText).toBe("저장");
   });
 
   it("빈 값 필드는 제외한다", () => {

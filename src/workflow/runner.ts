@@ -1,6 +1,5 @@
 import { chromium, type Browser, type Page } from "playwright";
 import type { WorkflowRow } from "../readers/normalize";
-import type { Config } from "../config";
 import { navigateToMenu } from "./navigator";
 import { fillForm } from "./form-filler";
 import { generateReport, type RowResult, type Report } from "./reporter";
@@ -9,14 +8,15 @@ import { resolve } from "path";
 
 export interface RunOptions {
 	rows: WorkflowRow[];
-	config: Config;
+	siteUrl: string;
 	mode: "visible" | "fast";
+	stepDelay?: number;
 }
 
 export async function runWorkflow(options: RunOptions): Promise<Report> {
-	const { rows, config, mode } = options;
+	const { rows, siteUrl, mode, stepDelay = 500 } = options;
 	const headless = mode === "fast";
-	const stepDelay = mode === "fast" ? 0 : config.stepDelay;
+	const delay = mode === "fast" ? 0 : stepDelay;
 
 	mkdirSync(resolve(__dirname, "../../errors"), { recursive: true });
 
@@ -39,7 +39,7 @@ export async function runWorkflow(options: RunOptions): Promise<Report> {
 
 	const page: Page = await context.newPage();
 
-	await page.goto(config.siteUrl);
+	await page.goto(siteUrl);
 	await page.waitForLoadState("networkidle");
 
 	const results: RowResult[] = [];
@@ -59,10 +59,10 @@ export async function runWorkflow(options: RunOptions): Promise<Report> {
 
 		try {
 			// 1. 메뉴 네비게이션
-			await navigateToMenu(page, row.menuPath, stepDelay);
+			await navigateToMenu(page, row.menuPath, delay);
 
 			// 2. 폼 입력
-			const fillResults = await fillForm(page, row.fields, stepDelay);
+			const fillResults = await fillForm(page, row.fields, delay);
 			const failedFields = fillResults.filter((f) => !f.success);
 
 			if (failedFields.length > 0) {
@@ -78,13 +78,13 @@ export async function runWorkflow(options: RunOptions): Promise<Report> {
 				continue;
 			}
 
-			// 3. 저장
+			// 3. 저장 버튼 클릭 (엑셀의 저장버튼 열)
 			await page
-				.getByText(config.saveButtonText, { exact: false })
+				.getByText(row.saveButtonText, { exact: false })
 				.first()
 				.click({ force: true });
 			await page.waitForLoadState("networkidle");
-			await page.waitForTimeout(stepDelay);
+			await page.waitForTimeout(delay);
 
 			results.push({
 				rowIndex: row.rowIndex,
@@ -92,9 +92,9 @@ export async function runWorkflow(options: RunOptions): Promise<Report> {
 				success: true,
 			});
 
-				// 4. 다음 행을 위해 시작 페이지로 복귀
-				await page.goto(config.siteUrl);
-				await page.waitForLoadState("networkidle");
+			// 4. 다음 행을 위해 시작 페이지로 복귀
+			await page.goto(siteUrl);
+			await page.waitForLoadState("networkidle");
 		} catch (e) {
 			const screenshotPath = `errors/row${row.rowIndex}.png`;
 			try {
