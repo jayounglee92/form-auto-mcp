@@ -1,0 +1,9 @@
+src/
+tests/
+docs/
+errors/
+*.mjs
+test-result.png
+tsconfig.json
+.env
+.env.example
