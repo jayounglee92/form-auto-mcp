@@ -25,7 +25,7 @@ export async function navigateToMenu(
   for (const step of steps) {
     if (step.action === "click" && step.text) {
       const menuArea = page.locator(menuSelector);
-      await menuArea.getByText(step.text, { exact: false }).click();
+      await menuArea.getByText(step.text, { exact: false }).click({ force: true });
       await page.waitForTimeout(stepDelay);
     } else if (step.action === "waitForNavigation") {
       await page.waitForLoadState("networkidle");

@@ -63,6 +63,25 @@ Create a `.env` file:
 GOOGLE_API_KEY=your_api_key
 ```
 
+## Quick Test (demoqa.com)
+
+A test config and sample Excel for [demoqa.com](https://demoqa.com) are included so you can try the automation right away — no internal system needed.
+
+**Included test files:**
+- `config.json` — pre-configured for demoqa.com
+- `templates/test-demoqa.xlsx` — 3 rows of sample data (홍길동, 김철수, 이영희)
+
+**Run the test:**
+
+```bash
+npm run build
+node test-run.mjs
+```
+
+A browser window will open and you can watch the automation fill out the Text Box form 3 times in a row. The result report will be printed in the terminal.
+
+> **Note:** To use with your actual internal system, replace `config.json` with your site's URL, menu selector, and save button text. Update the Excel column names to match your form's labels or input IDs.
+
 ## Usage
 
 ### Fill forms from Excel

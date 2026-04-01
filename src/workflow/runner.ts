@@ -22,6 +22,16 @@ export async function runWorkflow(options: RunOptions): Promise<Report> {
 
   const browser: Browser = await chromium.launch({ headless });
   const context = await browser.newContext();
+
+  // 광고 차단
+  await context.route("**/*", (route) => {
+    const url = route.request().url();
+    if (url.includes("googleads") || url.includes("adservice") || url.includes("doubleclick") || url.includes("ad.plus")) {
+      return route.abort();
+    }
+    return route.continue();
+  });
+
   const page: Page = await context.newPage();
 
   await page.goto(config.siteUrl);
@@ -64,7 +74,7 @@ export async function runWorkflow(options: RunOptions): Promise<Report> {
       }
 
       // 3. 저장
-      await page.getByText(config.saveButtonText, { exact: false }).click();
+      await page.getByText(config.saveButtonText, { exact: false }).first().click({ force: true });
       await page.waitForLoadState("networkidle");
       await page.waitForTimeout(stepDelay);
 
