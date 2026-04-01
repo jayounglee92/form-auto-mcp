@@ -91,6 +91,10 @@ export async function runWorkflow(options: RunOptions): Promise<Report> {
 				menuPath: menuPathStr,
 				success: true,
 			});
+
+				// 4. 다음 행을 위해 시작 페이지로 복귀
+				await page.goto(config.siteUrl);
+				await page.waitForLoadState("networkidle");
 		} catch (e) {
 			const screenshotPath = `errors/row${row.rowIndex}.png`;
 			try {
