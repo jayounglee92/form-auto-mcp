@@ -67,7 +67,7 @@ export async function runWorkflow(options: RunOptions): Promise<Report> {
 
 			if (failedFields.length > 0) {
 				const screenshotPath = `errors/row${row.rowIndex}.png`;
-				await page.screenshot({ path: resolve(process.cwd(), screenshotPath) });
+				await page.screenshot({ path: resolve(__dirname, "../..", screenshotPath) });
 				results.push({
 					rowIndex: row.rowIndex,
 					menuPath: menuPathStr,
@@ -98,7 +98,7 @@ export async function runWorkflow(options: RunOptions): Promise<Report> {
 		} catch (e) {
 			const screenshotPath = `errors/row${row.rowIndex}.png`;
 			try {
-				await page.screenshot({ path: resolve(process.cwd(), screenshotPath) });
+				await page.screenshot({ path: resolve(__dirname, "../..", screenshotPath) });
 			} catch {}
 
 			const errorMessage = e instanceof Error ? e.message : String(e);

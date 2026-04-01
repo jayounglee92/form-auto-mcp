@@ -15,8 +15,11 @@ const DEFAULT_CONFIG: Config = {
   stepDelay: 500,
 };
 
+// 프로젝트 루트: dist/config.js 기준으로 한 단계 위
+const PROJECT_ROOT = resolve(__dirname, "..");
+
 export function loadConfig(configPath?: string): Config {
-  const path = configPath ?? resolve(process.cwd(), "config.json");
+  const path = configPath ?? resolve(PROJECT_ROOT, "config.json");
 
   if (!existsSync(path)) {
     return { ...DEFAULT_CONFIG };
