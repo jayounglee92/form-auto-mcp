@@ -1,6 +1,6 @@
 {
   "name": "form-auto-mcp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MCP server for Claude Desktop that automates form submissions using Playwright",
   "main": "dist/index.js",
   "bin": {
@@ -21,6 +21,11 @@
   "keywords": ["mcp", "playwright", "form-automation", "claude-desktop"],
   "author": "jayounglee92",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jayounglee92/form-auto-mcp.git"
+  },
+  "homepage": "https://github.com/jayounglee92/form-auto-mcp",
   "type": "commonjs",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
